@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Dashboard - Medi Land Incineration Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section h1 {
+            color: #2563eb;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo-section p {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .date-time {
+            text-align: right;
+        }
+
+        .date-time .date {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .date-time .time {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 40px;
+        }
+
+        .alert-banner {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-banner.warning {
+            background: #fffbeb;
+            border-left-color: #f59e0b;
+        }
+
+        .alert-icon {
+            font-size: 20px;
+        }
+
+        .alert-content h4 {
+            color: #991b1b;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .alert-content.warning h4 {
+            color: #92400e;
+        }
+
+        .alert-content p {
+            color: #7f1d1d;
+            font-size: 13px;
+        }
+
+        .alert-content.warning p {
+            color: #78350f;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .kpi-title {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .kpi-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .kpi-footer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .trend-up {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .trend-down {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .trend-neutral {
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tab {
+            padding: 6px 16px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .status-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .status-item:hover {
+            background: #f1f5f9;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .status-indicator.online {
+            background: #10b981;
+            box-shadow: 0 0 0 4px #d1fae5;
+        }
+
+        .status-indicator.offline {
+            background: #ef4444;
+            box-shadow: 0 0 0 4px #fee2e2;
+        }
+
+        .status-indicator.warning {
+            background: #f59e0b;
+            box-shadow: 0 0 0 4px #fef3c7;
+        }
+
+        .location-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .location-info {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-badge.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .chart-container {
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 20px 0;
+            gap: 8px;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+            border-radius: 6px 6px 0 0;
+            position: relative;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .bar:hover {
+            background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+            transform: translateY(-4px);
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: #64748b;
+            white-space: nowrap;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .sites-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .sites-table th {
+            text-align: left;
+            padding: 12px;
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 13px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .sites-table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .sites-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .progress-fill.warning {
+            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .progress-fill.danger {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .quick-stat {
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .quick-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .quick-stat-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-section">
+            <h1>🏥 Medi Land Pakistan</h1>
+            <p>Incineration Management System</p>
+        </div>
+        <div class="header-right">
+            <div class="date-time">
+                <div class="date">Thursday, November 06, 2025</div>
+                <div class="time">Last updated: 2 mins ago</div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">AH</div>
+                <div>
+                    <div style="font-weight: 600; font-size: 14px;">Admin User</div>
+                    <div style="color: #64748b; font-size: 12px;">System Administrator</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Critical Alerts -->
+        <div class="alert-banner">
+            <div class="alert-icon">🚨</div>
+            <div class="alert-content">
+                <h4>Critical: 8 Sites with LPG Supply Issues</h4>
+                <p>Immediate action required - Arifwala, Bahawalpur, Chichawatni, Nankana Sb, Rajanpur, Sheikhupura and 2 more locations need LPG refill</p>
+            </div>
+        </div>
+
+        <div class="alert-banner warning">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content warning">
+                <h4>Rajanpur: Transformer Faulty - Awaiting Maintenance</h4>
+                <p>Electrical issue reported 4 hours ago. Maintenance team dispatched.</p>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span class="kpi-title">Active Sites</span>
+                    <div class="kpi-icon" style="background: #dbeafe; color: #2563eb;">✓</div>
+                </div>
+                <div class="kpi-value">8/14</div>
+                <div class="kpi-footer">
+                    <span class="trend-down">↓ 6 sites</span>
+                    <span style="color: #94a3b8;">offline today</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span class="kpi-title">Waste Incinerated (Today)</span>
+                    <div class="kpi-icon" style="background: #dcfce7; color: #16a34a;">🔥</div>
+                </div>
+                <div class="kpi-value">3,944 kg</div>
+                <div class="kpi-footer">
+                    <span class="trend-down">↓ 43%</span>
+                    <span style="color: #94a3b8;">vs yesterday (6,934 kg)</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span class="kpi-title">Weekly Average</span>
+                    <div class="kpi-icon" style="background: #fef3c7; color: #d97706;">📊</div>
+                </div>
+                <div class="kpi-value">5,081 kg</div>
+                <div class="kpi-footer">
+                    <span class="trend-up">↑ 12%</span>
+                    <span style="color: #94a3b8;">vs last week</span>
+                </div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span class="kpi-title">Operational Hours</span>
+                    <div class="kpi-icon" style="background: #e0e7ff; color: #6366f1;">⏱️</div>
+                </div>
+                <div class="kpi-value">84.1 hrs</div>
+                <div class="kpi-footer">
+                    <span class="trend-neutral">→ 37.5%</span>
+                    <span style="color: #94a3b8;">utilization rate</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Weekly Trend Chart -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Weekly Incineration Trend</h3>
+                    <div class="filter-tabs">
+                        <button class="tab active">7 Days</button>
+                        <button class="tab">30 Days</button>
+                        <button class="tab">Quarter</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="bar" style="height: 75%;">
+                        <div class="bar-value">5,766 kg</div>
+                        <div class="bar-label">15-Oct</div>
+                    </div>
+                    <div class="bar" style="height: 95%;">
+                        <div class="bar-value">7,284 kg</div>
+                        <div class="bar-label">16-Oct</div>
+                    </div>
+                    <div class="bar" style="height: 92%;">
+                        <div class="bar-value">7,182 kg</div>
+                        <div class="bar-label">17-Oct</div>
+                    </div>
+                    <div class="bar" style="height: 88%;">
+                        <div class="bar-value">6,934 kg</div>
+                        <div class="bar-label">18-Oct</div>
+                    </div>
+                    <div class="bar" style="height: 0%; background: #e2e8f0;">
+                        <div class="bar-value" style="color: #94a3b8;">0 kg</div>
+                        <div class="bar-label">19-Oct</div>
+                    </div>
+                    <div class="bar" style="height: 58%;">
+                        <div class="bar-value">4,461 kg</div>
+                        <div class="bar-label">20-Oct</div>
+                    </div>
+                    <div class="bar" style="height: 50%;">
+                        <div class="bar-value">3,944 kg</div>
+                        <div class="bar-label">21-Oct</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Site Status -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Live Site Status</h3>
+                    <span style="font-size: 13px; color: #10b981; font-weight: 600;">● Live</span>
+                </div>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="status-left">
+                            <div class="status-indicator online"></div>
+                            <div>
+                                <div class="location-name">Kasur</div>
+                                <div class="location-info">622 kg • 12:35 hrs</div>
+                            </div>
+                        </div>
+                        <span class="status-badge success">Active</span>
+                    </div>
+
+                    <div class="status-item">
+                        <div class="status-left">
+                            <div class="status-indicator online"></div>
+                            <div>
+                                <div class="location-name">Bhakkar</div>
+                                <div class="location-info">610 kg • 12:30 hrs</div>
+                            </div>
+                        </div>
+                        <span class="status-badge success">Active</span>
+                    </div>
+
+                    <div class="status-item">
+                        <div class="status-left">
+                            <div class="status-indicator online"></div>
+                            <div>
+                                <div class="location-name">Vehari</div>
+                                <div class="location-info">602 kg • 12:30 hrs</div>
+                            </div>
+                        </div>
+                        <span class="status-badge success">Active</span>
+                    </div>
+
+                    <div class="status-item">
+                        <div class="status-left">
+                            <div class="status-indicator offline"></div>
+                            <div>
+                                <div class="location-name">Arifwala</div>
+                                <div class="location-info">LPG Finished</div>
+                            </div>
+                        </div>
+                        <span class="status-badge danger">Offline</span>
+                    </div>
+
+                    <div class="status-item">
+                        <div class="status-left">
+                            <div class="status-indicator offline"></div>
+                            <div>
+                                <div class="location-name">Rajanpur</div>
+                                <div class="location-info">Transformer Faulty</div>
+                            </div>
+                        </div>
+                        <span class="status-badge danger">Offline</span>
+                    </div>
+
+                    <div class="status-item">
+                        <div class="status-left">
+                            <div class="status-indicator warning"></div>
+                            <div>
+                                <div class="location-name">Gujrat</div>
+                                <div class="location-info">167 kg • 4:06 hrs</div>
+                            </div>
+                        </div>
+                        <span class="status-badge warning">Low Output</span>
+                    </div>
+                </div>
+
+                <div class="quick-stats">
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" style="color: #10b981;">8</div>
+                        <div class="quick-stat-label">Active Now</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" style="color: #ef4444;">6</div>
+                        <div class="quick-stat-label">Offline</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Sites Table -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">All Sites Performance - Today (21-Oct-25)</h3>
+                <div class="filter-tabs">
+                    <button class="tab active">Today</button>
+                    <button class="tab">Week</button>
+                    <button class="tab">Month</button>
+                </div>
+            </div>
+            <table class="sites-table">
+                <thead>
+                    <tr>
+                        <th>Site Location</th>
+                        <th>Status</th>
+                        <th>Waste Incinerated</th>
+                        <th>Operating Hours</th>
+                        <th>Efficiency</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Kasur</strong></td>
+                        <td><span class="status-badge success">Active</span></td>
+                        <td><strong>622 kg</strong> (150 bags)</td>
+                        <td>12:35</td>
+                        <td>
+                            <div>52 kg/hr</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%;"></div>
+                            </div>
+                        </td>
+                        <td style="color: #10b981; font-weight: 600;">Operational</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bhakkar</strong></td>
+                        <td><span class="status-badge success">Active</span></td>
+                        <td><strong>610 kg</strong> (174 bags)</td>
+                        <td>12:30</td>
+                        <td>
+                            <div>51 kg/hr</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 98%;"></div>
+                            </div>
+                        </td>
+                        <td style="color: #10b981; font-weight: 600;">Operational</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vehari</strong></td>
+                        <td><span class="status-badge success">Active</span></td>
+                        <td><strong>602 kg</strong> (197 bags)</td>
+                        <td>12:30</td>
+                        <td>
+                            <div>50 kg/hr</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 96%;"></div>
+                            </div>
+                        </td>
+                        <td style="color: #10b981; font-weight: 600;">Operational</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sialkot</strong></td>
+                        <td><span class="status-badge success">Active</span></td>
+                        <td><strong>554 kg</strong> (153 bags)</td>
+                        <td>10:46</td>
+                        <td>
+                            <div>54 kg/hr</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 95%;"></div>
+                            </div>
+                        </td>
+                        <td style="color: #f59e0b; font-weight: 600;">Electricity Breakdown</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gujranwala</strong></td>
+                        <td><span class="status-badge success">Active</span></td>
+                        <td><strong>552 kg</strong> (240 bags)</td>
+                        <td>12:32</td>
+                        <td>
+                            <div>46 kg/hr</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill warning" style="width: 88%;"></div>
+                            </div>
+                        </td>
+                        <td style="color: #10b981; font-weight: 600;">Operational</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Chiniot</strong></td>
+                        <td><span class="status-badge success">Active</span></td>
+                        <td><strong>551 kg</strong> (159 bags)</td>
+                        <td>12:31</td>
+                        <td>
+                            <div>46 kg/hr</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill warning" style="width: 88%;"></div>
+                            </div>
+                        </td>
+                        <td style="color: #10b981; font-weight: 600;">Operational</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Attock</strong></td>
+                        <td><span class="status-badge success">Active</span></td>
+                        <td><strong>286 kg</strong> (112 bags)</td>
+                        <td>6:35</td>
+                        <td>
+                            <div>49 kg/hr</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill warning" style="width: 70%;"></div>
+                            </div>
+                        </td>
+                        <td style="color: #f59e0b; font-weight: 600;">LPG Finished</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gujrat</strong></td>
+                        <td><span class="status-badge warning">Low Output</span></td>
+                        <td><strong>167 kg</strong> (48 bags)</td>
+                        <td>4:06</td>
+                        <td>
+                            <div>47 kg/hr</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill warning" style="width: 45%;"></div>
+                            </div>
+                        </td>
+                        <td style="color: #f59e0b; font-weight: 600;">LPG Finished</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arifwala</strong></td>
+                        <td><span class="status-badge danger">Offline</span></td>
+                        <td>0 kg (0 bags)</td>
+                        <td>0:00</td>
+                        <td>
+                            <div>-</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill danger" style="width: 0%;"></div>
+                            </div>
+                        </td>
+                        <td style="color: #ef4444; font-weight: 600;">LPG Finished</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bahawalpur</strong></td>
+                        <td><span class="status-badge danger">Offline</span></td>
+                        <td>0 kg (0 bags)</td>
+                        <td>0:00</td>
+                        <td>
+                            <div>-</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill danger" style="width: 0%;"></div>
+                            </div>
+                        </td>
+                        <td style="color: #ef4444; font-weight: 600;">LPG Finished</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rajanpur</strong></td>
+                        <td><span class="status-badge danger">Offline</span></td>
+                        <td>0 kg (0 bags)</td>
+                        <td>0:00</td>
+                        <td>
+                            <div>-</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill danger" style="width: 0%;"></div>
+                            </div>
+                        </td>
+                        <td style="color: #ef4444; font-weight: 600;">Transformer Faulty</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

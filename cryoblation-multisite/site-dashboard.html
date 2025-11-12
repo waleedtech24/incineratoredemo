@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lahore Site Dashboard - CryoablationSoftware</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        .metric-card {
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+        .activity-item {
+            padding: 15px;
+            border-left: 3px solid #667eea;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .inventory-item {
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #28a745;
+        }
+        .inventory-item.low-stock {
+            border-left-color: #dc3545;
+        }
+        .inventory-item.medium-stock {
+            border-left-color: #ffc107;
+        }
+        .breadcrumb {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="super-admin-dashboard.html">
+                <i class="fas fa-arrow-left"></i> Back to Network
+            </a>
+            <div class="navbar-brand mx-auto">
+                <i class="fas fa-hospital"></i> Lahore Site Dashboard
+            </div>
+            <div class="d-flex align-items-center text-white">
+                <span class="me-3"><i class="fas fa-user"></i> Site Admin</span>
+                <span><i class="far fa-clock"></i> <span id="currentTime"></span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="super-admin-dashboard.html">Network</a></li>
+                <li class="breadcrumb-item active">Lahore - Jinnah Hospital</li>
+            </ol>
+        </nav>
+
+        <!-- Site Info Banner -->
+        <div class="alert alert-info mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h5 class="mb-1"><i class="fas fa-map-marker-alt"></i> Jinnah Hospital, Lahore</h5>
+                    <p class="mb-0">Main Hub | Machine ID: CRY-LHR-001 | Status: <span class="badge bg-success">Active</span></p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-primary"><i class="fas fa-file-excel"></i> Export Report</button>
+                    <button class="btn btn-secondary"><i class="fas fa-print"></i> Print</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <h5 class="mb-3"><i class="fas fa-chart-bar"></i> Key Performance Indicators</h5>
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="metric-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon" style="background: rgba(255,255,255,0.2);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="mb-0">Total Patients</h6>
+                            <h3 class="mb-0">487</h3>
+                            <small><i class="fas fa-arrow-up"></i> +42 this month</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon" style="background: rgba(255,255,255,0.2);">
+                            <i class="fas fa-procedures"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="mb-0">Total Procedures</h6>
+                            <h3 class="mb-0">612</h3>
+                            <small><i class="fas fa-arrow-up"></i> +58 this month</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon" style="background: rgba(255,255,255,0.2);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="mb-0">Success Rate</h6>
+                            <h3 class="mb-0">98.2%</h3>
+                            <small><i class="fas fa-star"></i> Excellent</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white;">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon" style="background: rgba(255,255,255,0.2);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="mb-0">Avg Duration</h6>
+                            <h3 class="mb-0">45 min</h3>
+                            <small><i class="fas fa-tachometer-alt"></i> Optimal</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Overview -->
+        <h5 class="mb-3"><i class="fas fa-boxes"></i> Inventory Status</h5>
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="metric-card bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Probes</h6>
+                            <h4 class="mb-0 text-primary">145</h4>
+                            <small class="text-success"><i class="fas fa-check"></i> Healthy Stock</small>
+                        </div>
+                        <div class="stat-icon" style="background: #667eea;">
+                            <i class="fas fa-syringe"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">RBL20: 82 | RAL26: 63</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Sterile Covers</h6>
+                            <h4 class="mb-0 text-success">234</h4>
+                            <small class="text-success"><i class="fas fa-check"></i> Healthy Stock</small>
+                        </div>
+                        <div class="stat-icon" style="background: #28a745;">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">Last restocked: 3 days ago</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Ethanol</h6>
+                            <h4 class="mb-0 text-info">156 L</h4>
+                            <small class="text-success"><i class="fas fa-check"></i> Healthy Stock</small>
+                        </div>
+                        <div class="stat-icon" style="background: #17a2b8;">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">Usage: 12L/week avg</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Liquid Nitrogen</h6>
+                            <h4 class="mb-0 text-primary">89 L</h4>
+                            <small class="text-success"><i class="fas fa-check"></i> Healthy Stock</small>
+                        </div>
+                        <div class="stat-icon" style="background: #007bff;">
+                            <i class="fas fa-snowflake"></i>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">Usage: 8L/week avg</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4">
+            <!-- Procedures Trend -->
+            <div class="col-md-8">
+                <div class="chart-container">
+                    <h5 class="mb-3"><i class="fas fa-chart-line"></i> Procedures Trend (Last 6 Months)</h5>
+                    <canvas id="procedureTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Procedure Types -->
+            <div class="col-md-4">
+                <div class="chart-container">
+                    <h5 class="mb-3"><i class="fas fa-chart-pie"></i> Procedure Types</h5>
+                    <canvas id="procedureTypesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Usage & Recent Activity -->
+        <div class="row mb-4">
+            <!-- Inventory Usage -->
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h5 class="mb-3"><i class="fas fa-chart-bar"></i> Monthly Inventory Usage</h5>
+                    <canvas id="inventoryUsageChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h5 class="mb-3"><i class="fas fa-history"></i> Recent Activities</h5>
+                    <div class="activity-list" style="max-height: 300px; overflow-y: auto;">
+                        <div class="activity-item">
+                            <div class="d-flex justify-content-between">
+                                <strong>Procedure Completed</strong>
+                                <small class="text-muted">2 hours ago</small>
+                            </div>
+                            <p class="mb-0 small">Patient: Ahmed Khan | Procedure ID: #PRO-612</p>
+                            <small class="text-muted">Used: 1x RBL20, 2x Sterile Cover, 3L Ethanol</small>
+                        </div>
+                        <div class="activity-item">
+                            <div class="d-flex justify-content-between">
+                                <strong>Stock Received</strong>
+                                <small class="text-muted">5 hours ago</small>
+                            </div>
+                            <p class="mb-0 small">Received: 30x Sterile Covers</p>
+                            <small class="text-muted">Vendor: MedSupply Co. | Batch: SC-2024-089</small>
+                        </div>
+                        <div class="activity-item">
+                            <div class="d-flex justify-content-between">
+                                <strong>Procedure Scheduled</strong>
+                                <small class="text-muted">6 hours ago</small>
+                            </div>
+                            <p class="mb-0 small">Patient: Fatima Malik | Date: Nov 15, 2025</p>
+                            <small class="text-muted">Items Assigned: 1x RAL26, 2x Sterile Cover</small>
+                        </div>
+                        <div class="activity-item">
+                            <div class="d-flex justify-content-between">
+                                <strong>Procedure Completed</strong>
+                                <small class="text-muted">8 hours ago</small>
+                            </div>
+                            <p class="mb-0 small">Patient: Hassan Ali | Procedure ID: #PRO-611</p>
+                            <small class="text-muted">Used: 1x RBL20, 1x Sterile Cover, 2.5L Ethanol</small>
+                        </div>
+                        <div class="activity-item">
+                            <div class="d-flex justify-content-between">
+                                <strong>Patient Registered</strong>
+                                <small class="text-muted">1 day ago</small>
+                            </div>
+                            <p class="mb-0 small">New Patient: Sara Ahmed</p>
+                            <small class="text-muted">Registration ID: #PAT-487</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Inventory List -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="chart-container">
+                    <h5 class="mb-3"><i class="fas fa-warehouse"></i> Detailed Inventory Status</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="mb-2">Probes</h6>
+                            <div class="inventory-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Probe RBL20</strong>
+                                        <p class="mb-0 small text-muted">Barcode: Multiple | Reorder: 50</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <h5 class="mb-0 text-success">82</h5>
+                                        <small class="text-muted">In Stock</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inventory-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Probe RAL26</strong>
+                                        <p class="mb-0 small text-muted">Barcode: Multiple | Reorder: 40</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <h5 class="mb-0 text-success">63</h5>
+                                        <small class="text-muted">In Stock</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6 class="mb-2 mt-3">Consumables</h6>
+                            <div class="inventory-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Sterile Covers</strong>
+                                        <p class="mb-0 small text-muted">Batch: SC-2024-089 | Expiry: Dec 2026</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <h5 class="mb-0 text-success">234</h5>
+                                        <small class="text-muted">Units</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h6 class="mb-2">Liquids</h6>
+                            <div class="inventory-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Ethanol (Medical Grade)</strong>
+                                        <p class="mb-0 small text-muted">Batch: ETH-2024-234 | Reorder: 100L</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <h5 class="mb-0 text-success">156 L</h5>
+                                        <small class="text-muted">Available</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inventory-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Liquid Nitrogen</strong>
+                                        <p class="mb-0 small text-muted">Container: LN2-001 | Reorder: 50L</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <h5 class="mb-0 text-success">89 L</h5>
+                                        <small class="text-muted">Available</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6 class="mb-2 mt-3">Usage Statistics</h6>
+                            <div class="card border-info">
+                                <div class="card-body">
+                                    <p class="mb-1"><strong>This Month's Consumption:</strong></p>
+                                    <ul class="mb-0 small">
+                                        <li>Probes Used: 58 units</li>
+                                        <li>Sterile Covers: 116 units</li>
+                                        <li>Ethanol: 48 liters</li>
+                                        <li>Liquid Nitrogen: 32 liters</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Procedures -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="chart-container">
+                    <h5 class="mb-3"><i class="fas fa-calendar-alt"></i> Upcoming Procedures (Next 7 Days)</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Patient</th>
+                                    <th>Procedure Type</th>
+                                    <th>Assigned Items</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Nov 14, 2025</td>
+                                    <td>09:00 AM</td>
+                                    <td>Ali Raza</td>
+                                    <td>Lung Tumor Ablation</td>
+                                    <td><small>1x RBL20, 2x Sterile Cover</small></td>
+                                    <td><span class="badge bg-primary">Scheduled</span></td>
+                                    <td><button class="btn btn-sm btn-outline-primary">Details</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Nov 14, 2025</td>
+                                    <td>02:00 PM</td>
+                                    <td>Ayesha Khan</td>
+                                    <td>Liver Tumor Ablation</td>
+                                    <td><small>1x RAL26, 1x Sterile Cover</small></td>
+                                    <td><span class="badge bg-primary">Scheduled</span></td>
+                                    <td><button class="btn btn-sm btn-outline-primary">Details</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Nov 15, 2025</td>
+                                    <td>10:30 AM</td>
+                                    <td>Fatima Malik</td>
+                                    <td>Kidney Tumor Ablation</td>
+                                    <td><small>1x RAL26, 2x Sterile Cover</small></td>
+                                    <td><span class="badge bg-primary">Scheduled</span></td>
+                                    <td><button class="btn btn-sm btn-outline-primary">Details</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Nov 16, 2025</td>
+                                    <td>11:00 AM</td>
+                                    <td>Usman Ahmed</td>
+                                    <td>Lung Tumor Ablation</td>
+                                    <td><small>1x RBL20, 1x Sterile Cover</small></td>
+                                    <td><span class="badge bg-primary">Scheduled</span></td>
+                                    <td><button class="btn btn-sm btn-outline-primary">Details</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Nov 17, 2025</td>
+                                    <td>09:30 AM</td>
+                                    <td>Maria Saleem</td>
+                                    <td>Liver Tumor Ablation</td>
+                                    <td><small>1x RBL20, 2x Sterile Cover</small></td>
+                                    <td><span class="badge bg-primary">Scheduled</span></td>
+                                    <td><button class="btn btn-sm btn-outline-primary">Details</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                day: '2-digit',
+                month: 'short'
+            });
+        }
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // Procedure Trend Chart
+        const trendCtx = document.getElementById('procedureTrendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['June', 'July', 'August', 'September', 'October', 'November'],
+                datasets: [{
+                    label: 'Procedures',
+                    data: [62, 59, 65, 61, 68, 58],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Procedure Types Chart
+        const typesCtx = document.getElementById('procedureTypesChart').getContext('2d');
+        new Chart(typesCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Lung', 'Liver', 'Kidney', 'Others'],
+                datasets: [{
+                    data: [245, 198, 134, 35],
+                    backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#ffc107']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Inventory Usage Chart
+        const usageCtx = document.getElementById('inventoryUsageChart').getContext('2d');
+        new Chart(usageCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Probes', 'Sterile Covers', 'Ethanol (L)', 'Liquid N2 (L)'],
+                datasets: [{
+                    label: 'Used This Month',
+                    data: [58, 116, 48, 32],
+                    backgroundColor: ['#667eea', '#28a745', '#17a2b8', '#007bff']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

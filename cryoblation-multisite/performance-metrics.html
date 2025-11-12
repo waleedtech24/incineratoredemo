@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Metrics - CryoablationSoftware</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        .metric-card {
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: none;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        .leaderboard-item:hover {
+            transform: translateX(5px);
+            background: #e9ecef;
+        }
+        .rank-badge {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+        .rank-1 { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: white; }
+        .rank-2 { background: linear-gradient(135deg, #C0C0C0 0%, #A9A9A9 100%); color: white; }
+        .rank-3 { background: linear-gradient(135deg, #CD7F32 0%, #8B4513 100%); color: white; }
+        .rank-other { background: #e9ecef; color: #666; }
+        .performance-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .trend-indicator {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="super-admin-dashboard.html">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <div class="navbar-brand mx-auto">
+                <i class="fas fa-trophy"></i> Performance Metrics & Analytics
+            </div>
+            <div class="d-flex align-items-center text-white">
+                <span class="me-3"><i class="fas fa-user-shield"></i> Super Admin</span>
+                <span><i class="far fa-clock"></i> <span id="currentTime"></span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Overall Performance Highlight -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="highlight-box">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h3><i class="fas fa-star"></i> Network Performance Excellence</h3>
+                            <p class="mb-0">Your network achieved <strong>96.9% success rate</strong> this month - highest in 2025! 
+                            Lahore leads with 98.2%, followed by Karachi at 97.8%. Keep up the excellent work!</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <h1 style="font-size: 4rem; margin: 0;">🏆</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Performance Indicators -->
+        <h5 class="mb-3"><i class="fas fa-chart-bar"></i> Key Performance Indicators</h5>
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #28a745 0%, #34d058 100%);">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="text-muted mb-0">Success Rate</h6>
+                            <h3 class="mb-0">96.9%</h3>
+                            <small class="text-success"><i class="fas fa-arrow-up"></i> +1.2% vs last month</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #17a2b8 0%, #00cfe8 100%);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="text-muted mb-0">Avg Procedure Time</h6>
+                            <h3 class="mb-0">46 min</h3>
+                            <small class="text-info"><i class="fas fa-arrow-down"></i> -3 min vs last month</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ffc107 0%, #ffdb4d 100%);">
+                            <i class="fas fa-redo"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="text-muted mb-0">Complication Rate</h6>
+                            <h3 class="mb-0">2.8%</h3>
+                            <small class="text-success"><i class="fas fa-arrow-down"></i> -0.5% vs last month</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="text-muted mb-0">Patient Satisfaction</h6>
+                            <h3 class="mb-0">94.5%</h3>
+                            <small class="text-success"><i class="fas fa-arrow-up"></i> +2.1% vs last month</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Site Performance Leaderboard -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h6 class="mb-3"><i class="fas fa-trophy"></i> Site Performance Leaderboard</h6>
+                    <div class="leaderboard-item">
+                        <div class="rank-badge rank-1">1</div>
+                        <div class="flex-grow-1">
+                            <strong>Lahore - Jinnah Hospital</strong>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="text-muted small">Success Rate</span>
+                                <span class="performance-badge" style="background: #d4edda; color: #155724;">98.2%</span>
+                            </div>
+                        </div>
+                        <div class="text-end ms-3">
+                            <span class="trend-indicator text-success"><i class="fas fa-arrow-up"></i> +0.8%</span>
+                        </div>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="rank-badge rank-2">2</div>
+                        <div class="flex-grow-1">
+                            <strong>Karachi - Aga Khan Hospital</strong>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="text-muted small">Success Rate</span>
+                                <span class="performance-badge" style="background: #d4edda; color: #155724;">97.8%</span>
+                            </div>
+                        </div>
+                        <div class="text-end ms-3">
+                            <span class="trend-indicator text-success"><i class="fas fa-arrow-up"></i> +1.1%</span>
+                        </div>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="rank-badge rank-3">3</div>
+                        <div class="flex-grow-1">
+                            <strong>Peshawar - Khyber Teaching</strong>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="text-muted small">Success Rate</span>
+                                <span class="performance-badge" style="background: #d4edda; color: #155724;">97.2%</span>
+                            </div>
+                        </div>
+                        <div class="text-end ms-3">
+                            <span class="trend-indicator text-success"><i class="fas fa-arrow-up"></i> +1.5%</span>
+                        </div>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="rank-badge rank-other">4</div>
+                        <div class="flex-grow-1">
+                            <strong>Faisalabad - Allied Hospital</strong>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="text-muted small">Success Rate</span>
+                                <span class="performance-badge" style="background: #d4edda; color: #155724;">96.8%</span>
+                            </div>
+                        </div>
+                        <div class="text-end ms-3">
+                            <span class="trend-indicator text-success"><i class="fas fa-arrow-up"></i> +0.6%</span>
+                        </div>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="rank-badge rank-other">5</div>
+                        <div class="flex-grow-1">
+                            <strong>Islamabad - PIMS Hospital</strong>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="text-muted small">Success Rate</span>
+                                <span class="performance-badge" style="background: #fff3cd; color: #856404;">96.5%</span>
+                            </div>
+                        </div>
+                        <div class="text-end ms-3">
+                            <span class="trend-indicator text-warning"><i class="fas fa-minus"></i> 0.0%</span>
+                        </div>
+                    </div>
+
+                    <div class="leaderboard-item">
+                        <div class="rank-badge rank-other">6</div>
+                        <div class="flex-grow-1">
+                            <strong>Multan - Nishtar Hospital</strong>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="text-muted small">Success Rate</span>
+                                <span class="performance-badge" style="background: #fff3cd; color: #856404;">95.1%</span>
+                            </div>
+                        </div>
+                        <div class="text-end ms-3">
+                            <span class="trend-indicator text-danger"><i class="fas fa-arrow-down"></i> -0.4%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h6 class="mb-3"><i class="fas fa-chart-line"></i> Success Rate Trends (Last 6 Months)</h6>
+                    <canvas id="successTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctor Performance -->
+        <h5 class="mb-3"><i class="fas fa-user-md"></i> Physician Performance Analysis</h5>
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="chart-container">
+                    <h6 class="mb-3">Top Performing Physicians (This Month)</h6>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Physician</th>
+                                    <th>Procedures</th>
+                                    <th>Success Rate</th>
+                                    <th>Avg Time</th>
+                                    <th>Specialization</th>
+                                    <th>Performance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="rank-badge rank-1" style="width: 30px; height: 30px; font-size: 0.9rem;">1</span></td>
+                                    <td><strong>Prof Dr Shahzad</strong></td>
+                                    <td>142</td>
+                                    <td><span class="badge bg-success">98.6%</span></td>
+                                    <td>42 min</td>
+                                    <td>Liver, Lung</td>
+                                    <td><span class="performance-badge" style="background: #d4edda; color: #155724;">Excellent</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank-badge rank-2" style="width: 30px; height: 30px; font-size: 0.9rem;">2</span></td>
+                                    <td><strong>Prof Dr Feng Zung</strong></td>
+                                    <td>118</td>
+                                    <td><span class="badge bg-success">97.9%</span></td>
+                                    <td>45 min</td>
+                                    <td>Breast, Kidney</td>
+                                    <td><span class="performance-badge" style="background: #d4edda; color: #155724;">Excellent</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank-badge rank-3" style="width: 30px; height: 30px; font-size: 0.9rem;">3</span></td>
+                                    <td><strong>Dr Zunair</strong></td>
+                                    <td>98</td>
+                                    <td><span class="badge bg-success">96.9%</span></td>
+                                    <td>48 min</td>
+                                    <td>Lung, Liver</td>
+                                    <td><span class="performance-badge" style="background: #d4edda; color: #155724;">Very Good</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank-badge rank-other" style="width: 30px; height: 30px; font-size: 0.9rem;">4</span></td>
+                                    <td><strong>Dr Ayesha Khan</strong></td>
+                                    <td>76</td>
+                                    <td><span class="badge bg-success">96.1%</span></td>
+                                    <td>50 min</td>
+                                    <td>Breast</td>
+                                    <td><span class="performance-badge" style="background: #d4edda; color: #155724;">Very Good</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank-badge rank-other" style="width: 30px; height: 30px; font-size: 0.9rem;">5</span></td>
+                                    <td><strong>Dr Ahmed Raza</strong></td>
+                                    <td>64</td>
+                                    <td><span class="badge bg-warning text-dark">95.3%</span></td>
+                                    <td>52 min</td>
+                                    <td>Kidney</td>
+                                    <td><span class="performance-badge" style="background: #fff3cd; color: #856404;">Good</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="chart-container">
+                    <h6 class="mb-3"><i class="fas fa-award"></i> Performance Distribution</h6>
+                    <canvas id="performanceDistChart"></canvas>
+                    <div class="mt-3">
+                        <div class="alert alert-success">
+                            <strong><i class="fas fa-trophy"></i> Team Excellence!</strong>
+                            <p class="mb-0 small">85% of physicians maintain above 96% success rate. This is 12% higher than industry average.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Procedure Type Analysis -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h6 class="mb-3"><i class="fas fa-procedures"></i> Procedure Type Success Rates</h6>
+                    <canvas id="procedureSuccessChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h6 class="mb-3"><i class="fas fa-chart-pie"></i> Procedure Volume Distribution</h6>
+                    <canvas id="procedureVolumeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Efficiency Metrics -->
+        <h5 class="mb-3"><i class="fas fa-tachometer-alt"></i> Operational Efficiency</h5>
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="chart-container">
+                    <h6 class="mb-3">Average Procedure Time by Site & Type</h6>
+                    <canvas id="efficiencyChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Improvement Opportunities -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h6 class="mb-3"><i class="fas fa-lightbulb"></i> Improvement Opportunities</h6>
+                    <div class="alert alert-warning">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Multan Site Analysis</strong>
+                        <p class="mb-2">Success rate dropped to 95.1% (-0.4% from last month)</p>
+                        <hr>
+                        <p class="mb-1"><strong>Recommended Actions:</strong></p>
+                        <ul class="mb-0 small">
+                            <li>Schedule training session with top-performing physicians from Lahore</li>
+                            <li>Review recent challenging cases (3 complications in kidney procedures)</li>
+                            <li>Evaluate equipment maintenance logs for any issues</li>
+                            <li>Consider temporary assignment of experienced physician for mentoring</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h6 class="mb-3"><i class="fas fa-star"></i> Best Practices</h6>
+                    <div class="alert alert-success">
+                        <strong><i class="fas fa-check-circle"></i> Islamabad Efficiency Excellence</strong>
+                        <p class="mb-2">Fastest average procedure time (42 min) with 96.5% success rate</p>
+                        <hr>
+                        <p class="mb-1"><strong>Success Factors Identified:</strong></p>
+                        <ul class="mb-0 small">
+                            <li>Streamlined pre-procedure patient preparation protocol</li>
+                            <li>Dedicated anesthesia team with specialized cryoablation training</li>
+                            <li>Advanced imaging equipment for precise probe placement</li>
+                            <li>Post-procedure recovery process optimization</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-sm btn-primary mt-2 w-100">
+                        <i class="fas fa-share-alt"></i> Share Best Practices with All Sites
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                day: '2-digit',
+                month: 'short'
+            });
+        }
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // Success Trend Chart
+        const trendCtx = document.getElementById('successTrendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+                datasets: [
+                    {
+                        label: 'Lahore',
+                        data: [97.2, 97.5, 97.8, 97.6, 97.4, 98.2],
+                        borderColor: '#667eea',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Karachi',
+                        data: [96.8, 96.9, 97.1, 96.7, 96.7, 97.8],
+                        borderColor: '#764ba2',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Network Avg',
+                        data: [95.8, 96.1, 96.3, 96.0, 95.7, 96.9],
+                        borderColor: '#28a745',
+                        borderDash: [5, 5],
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: { min: 94, max: 100 }
+                }
+            }
+        });
+
+        // Performance Distribution
+        const perfDistCtx = document.getElementById('performanceDistChart').getContext('2d');
+        new Chart(perfDistCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Excellent (97%+)', 'Very Good (95-97%)', 'Good (93-95%)'],
+                datasets: [{
+                    data: [65, 28, 7],
+                    backgroundColor: ['#28a745', '#17a2b8', '#ffc107']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Procedure Success Chart
+        const procSuccessCtx = document.getElementById('procedureSuccessChart').getContext('2d');
+        new Chart(procSuccessCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Liver', 'Lung', 'Kidney', 'Breast'],
+                datasets: [{
+                    label: 'Success Rate (%)',
+                    data: [97.8, 96.5, 95.9, 97.2],
+                    backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#28a745']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { min: 94, max: 100 }
+                }
+            }
+        });
+
+        // Procedure Volume Chart
+        const procVolCtx = document.getElementById('procedureVolumeChart').getContext('2d');
+        new Chart(procVolCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Liver', 'Lung', 'Kidney', 'Breast'],
+                datasets: [{
+                    data: [38, 32, 18, 12],
+                    backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#28a745']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Efficiency Chart
+        const effCtx = document.getElementById('efficiencyChart').getContext('2d');
+        new Chart(effCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Lahore', 'Karachi', 'Islamabad', 'Multan', 'Peshawar', 'Faisalabad'],
+                datasets: [
+                    {
+                        label: 'Liver Procedures',
+                        data: [43, 46, 40, 52, 47, 45],
+                        backgroundColor: '#667eea'
+                    },
+                    {
+                        label: 'Lung Procedures',
+                        data: [46, 49, 44, 54, 48, 46],
+                        backgroundColor: '#764ba2'
+                    },
+                    {
+                        label: 'Kidney Procedures',
+                        data: [48, 51, 45, 56, 50, 48],
+                        backgroundColor: '#f093fb'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Average Time (minutes)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
